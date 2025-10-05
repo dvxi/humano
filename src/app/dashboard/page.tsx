@@ -211,8 +211,10 @@ export default async function DashboardPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold">Welcome back, {user.name || 'Athlete'}!</h1>
-        <p className="text-muted-foreground">Here&apos;s your fitness overview for today</p>
+        <h1 className="text-4xl font-bold font-[family-name:var(--font-noto-serif-hebrew)]">
+          Welcome back, {user.name || 'Athlete'}!
+        </h1>
+        <p className="text-muted-foreground mt-2">Here&apos;s your fitness overview for today</p>
       </div>
 
       {/* Daily Recommendation */}
@@ -222,15 +224,15 @@ export default async function DashboardPage() {
 
       {/* Metrics Grid */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        <Card className="border-l-4 border-l-red-500 hover:shadow-lg transition-shadow">
+        <Card className="hover:shadow-md transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Heart Rate Variability</CardTitle>
-            <Heart className="h-5 w-5 text-red-500" />
+            <Heart className="h-4 w-4 text-red-500" />
           </CardHeader>
           <CardContent>
             {latestHRV ? (
               <>
-                <div className="text-3xl font-bold text-red-600 dark:text-red-400">
+                <div className="text-3xl font-bold">
                   {latestHRV.value.toFixed(0)}{' '}
                   <span className="text-lg text-muted-foreground">{latestHRV.unit}</span>
                 </div>
@@ -244,15 +246,15 @@ export default async function DashboardPage() {
           </CardContent>
         </Card>
 
-        <Card className="border-l-4 border-l-orange-500 hover:shadow-lg transition-shadow">
+        <Card className="hover:shadow-md transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Resting Heart Rate</CardTitle>
-            <Activity className="h-5 w-5 text-orange-500" />
+            <Activity className="h-4 w-4 text-orange-500" />
           </CardHeader>
           <CardContent>
             {latestRHR ? (
               <>
-                <div className="text-3xl font-bold text-orange-600 dark:text-orange-400">
+                <div className="text-3xl font-bold">
                   {latestRHR.value.toFixed(0)}{' '}
                   <span className="text-lg text-muted-foreground">{latestRHR.unit}</span>
                 </div>
@@ -266,15 +268,15 @@ export default async function DashboardPage() {
           </CardContent>
         </Card>
 
-        <Card className="border-l-4 border-l-purple-500 hover:shadow-lg transition-shadow">
+        <Card className="hover:shadow-md transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Sleep</CardTitle>
-            <Moon className="h-5 w-5 text-purple-500" />
+            <Moon className="h-4 w-4 text-purple-500" />
           </CardHeader>
           <CardContent>
             {latestSleep ? (
               <>
-                <div className="text-3xl font-bold text-purple-600 dark:text-purple-400">
+                <div className="text-3xl font-bold">
                   {latestSleep.value.toFixed(1)}{' '}
                   <span className="text-lg text-muted-foreground">{latestSleep.unit}</span>
                 </div>
@@ -288,15 +290,15 @@ export default async function DashboardPage() {
           </CardContent>
         </Card>
 
-        <Card className="border-l-4 border-l-green-500 hover:shadow-lg transition-shadow">
+        <Card className="hover:shadow-md transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Steps</CardTitle>
-            <TrendingUp className="h-5 w-5 text-green-500" />
+            <TrendingUp className="h-4 w-4 text-green-500" />
           </CardHeader>
           <CardContent>
             {latestSteps ? (
               <>
-                <div className="text-3xl font-bold text-green-600 dark:text-green-400">
+                <div className="text-3xl font-bold">
                   {latestSteps.value.toLocaleString()}{' '}
                   <span className="text-lg text-muted-foreground">{latestSteps.unit}</span>
                 </div>
@@ -310,15 +312,15 @@ export default async function DashboardPage() {
           </CardContent>
         </Card>
 
-        <Card className="border-l-4 border-l-blue-500 hover:shadow-lg transition-shadow">
+        <Card className="hover:shadow-md transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Hydration</CardTitle>
-            <Droplet className="h-5 w-5 text-blue-500" />
+            <Droplet className="h-4 w-4 text-blue-500" />
           </CardHeader>
           <CardContent>
             {latestHydration ? (
               <>
-                <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">
+                <div className="text-3xl font-bold">
                   {latestHydration.value.toFixed(1)}{' '}
                   <span className="text-lg text-muted-foreground">{latestHydration.unit}</span>
                 </div>
@@ -332,17 +334,13 @@ export default async function DashboardPage() {
           </CardContent>
         </Card>
 
-        <Card className="border-l-4 border-l-yellow-500 hover:shadow-lg transition-shadow">
+        <Card className="hover:shadow-md transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Integrations</CardTitle>
-            <Zap className="h-5 w-5 text-yellow-500" />
+            <Zap className="h-4 w-4 text-yellow-500" />
           </CardHeader>
           <CardContent>
-            <Button
-              asChild
-              variant="outline"
-              className="w-full hover:bg-yellow-50 dark:hover:bg-yellow-950 hover:border-yellow-500 transition-colors"
-            >
+            <Button asChild variant="outline" className="w-full">
               <Link href="/dashboard/integrations">Connect Devices</Link>
             </Button>
           </CardContent>
@@ -350,39 +348,23 @@ export default async function DashboardPage() {
       </div>
 
       {/* Quick Actions */}
-      <Card className="border-t-4 border-t-gradient-to-r from-red-500 to-orange-500">
+      <Card>
         <CardHeader>
           <CardTitle>Quick Actions</CardTitle>
           <CardDescription>Log your daily metrics and activities</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-wrap gap-2">
-          <Button
-            asChild
-            variant="outline"
-            className="hover:bg-orange-50 dark:hover:bg-orange-950 hover:border-orange-500 hover:text-orange-600 dark:hover:text-orange-400 transition-colors"
-          >
-            <Link href="/dashboard/reports?type=morning">☀️ Morning Report</Link>
+          <Button asChild variant="outline">
+            <Link href="/dashboard/reports?type=morning">Morning Report</Link>
           </Button>
-          <Button
-            asChild
-            variant="outline"
-            className="hover:bg-blue-50 dark:hover:bg-blue-950 hover:border-blue-500 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-          >
-            <Link href="/dashboard/reports?type=day">🌙 Day Report</Link>
+          <Button asChild variant="outline">
+            <Link href="/dashboard/reports?type=day">Day Report</Link>
           </Button>
-          <Button
-            asChild
-            variant="outline"
-            className="hover:bg-red-50 dark:hover:bg-red-950 hover:border-red-500 hover:text-red-600 dark:hover:text-red-400 transition-colors"
-          >
-            <Link href="/dashboard/activity">💪 Log Workout</Link>
+          <Button asChild variant="outline">
+            <Link href="/dashboard/activity">Log Workout</Link>
           </Button>
-          <Button
-            asChild
-            variant="outline"
-            className="hover:bg-purple-50 dark:hover:bg-purple-950 hover:border-purple-500 hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
-          >
-            <Link href="/dashboard/history">📊 View History</Link>
+          <Button asChild variant="outline">
+            <Link href="/dashboard/history">View History</Link>
           </Button>
         </CardContent>
       </Card>

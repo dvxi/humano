@@ -15,7 +15,7 @@ const notoSerifHebrew = Noto_Serif_Hebrew({
 });
 
 export const metadata: Metadata = {
-  title: 'Fitness & Wellbeing App',
+  title: 'Humano - AI-Powered Fitness & Wellbeing',
   description:
     'Track your fitness, monitor recovery, and optimize your training with AI-powered recommendations',
 };

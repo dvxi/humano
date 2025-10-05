@@ -18,8 +18,10 @@ export default function SignUpPage() {
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle>Create Account</CardTitle>
-          <CardDescription>Get started with your fitness journey</CardDescription>
+          <CardTitle className="text-2xl font-[family-name:var(--font-noto-serif-hebrew)]">
+            Join Humano
+          </CardTitle>
+          <CardDescription>Begin your personalized fitness journey</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid gap-2">

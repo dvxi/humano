@@ -112,8 +112,10 @@ export default function OnboardingPage() {
       <div className="flex min-h-screen items-center justify-center bg-background px-4">
         <Card className="w-full max-w-2xl">
           <CardHeader>
-            <CardTitle>Welcome! Choose your role</CardTitle>
-            <CardDescription>How would you like to use the app?</CardDescription>
+            <CardTitle className="text-2xl font-[family-name:var(--font-noto-serif-hebrew)]">
+              Welcome to Humano
+            </CardTitle>
+            <CardDescription>Choose your role to get started</CardDescription>
           </CardHeader>
           <CardContent className="grid gap-4 md:grid-cols-2">
             <button

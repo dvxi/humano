@@ -28,9 +28,12 @@ export default async function HomePage() {
 
       <main className="flex flex-1 flex-col items-center justify-center px-4 text-center">
         <div className="max-w-3xl space-y-6">
-          <h1 className="text-5xl font-bold tracking-tight">
-            Optimize Your Training with AI-Powered Insights
+          <h1 className="text-6xl font-bold tracking-tight font-[family-name:var(--font-noto-serif-hebrew)]">
+            Humano
           </h1>
+          <h2 className="text-3xl font-semibold tracking-tight">
+            Optimize Your Training with AI-Powered Insights
+          </h2>
           <p className="text-xl text-muted-foreground">
             Track workouts, monitor recovery metrics, and get personalized training recommendations
             based on your HRV, sleep, and performance data.

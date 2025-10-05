@@ -18,10 +18,10 @@ export default function SignInPage() {
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle>Sign In</CardTitle>
-          <CardDescription>
-            Sign in to your account to access your fitness dashboard
-          </CardDescription>
+          <CardTitle className="text-2xl font-[family-name:var(--font-noto-serif-hebrew)]">
+            Sign In to Humano
+          </CardTitle>
+          <CardDescription>Access your personalized fitness dashboard</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid gap-2">
