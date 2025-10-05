@@ -71,10 +71,10 @@ export async function GET(_request: NextRequest) {
       profile: {
         age: profile?.age || undefined,
         sex: profile?.sex || undefined,
-        weight: profile?.weight || undefined,
-        height: profile?.height || undefined,
-        fitnessLevel: profile?.fitnessLevel || undefined,
-        goals: profile?.goals || undefined,
+        weight: profile?.weightKg || undefined,
+        height: profile?.heightCm || undefined,
+        fitnessLevel: undefined, // Profile model doesn't have fitnessLevel
+        goals: undefined, // Profile model doesn't have goals
       },
       recentMetrics: {
         avgSteps,
