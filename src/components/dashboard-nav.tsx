@@ -24,13 +24,14 @@ import {
   User,
   Calendar,
 } from 'lucide-react';
+import { Role } from '@prisma/client';
 
 interface DashboardNavProps {
   user: {
     name?: string | null;
     email?: string;
     image?: string | null;
-    role: string;
+    role: Role;
   };
 }
 
