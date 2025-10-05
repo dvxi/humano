@@ -2,9 +2,9 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { signOut } from 'next-auth/react';
 import { Button } from './ui/button';
-import { UserNav } from './user-nav';
-import { Activity, BarChart3, Home, Users, Zap, Calendar } from 'lucide-react';
+import { Activity, BarChart3, Home, Users, Zap, Calendar, User, LogOut } from 'lucide-react';
 import { Role } from '@prisma/client';
 
 interface DashboardNavProps {
@@ -54,7 +54,23 @@ export function DashboardNav({ user }: DashboardNavProps) {
           </div>
         </div>
 
-        <UserNav user={user} />
+        <div className="flex items-center gap-2">
+          <Link href="/dashboard/profile">
+            <Button variant="ghost" size="sm" className="gap-2">
+              <User className="h-4 w-4" />
+              <span className="hidden sm:inline">Profile</span>
+            </Button>
+          </Link>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="gap-2"
+            onClick={() => signOut({ callbackUrl: '/' })}
+          >
+            <LogOut className="h-4 w-4" />
+            <span className="hidden sm:inline">Sign Out</span>
+          </Button>
+        </div>
       </div>
     </nav>
   );
