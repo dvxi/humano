@@ -12,42 +12,53 @@ import { getToken } from 'next-auth/jwt';
  * - /api/* - Public (individual endpoints handle auth)
  * - /auth/* - Public (auth pages)
  * - / - Public (redirects based on session)
+ *
+ * Note: Using getToken() works with both JWT and database sessions
+ * because NextAuth creates a session token cookie in both cases.
  */
 
-const publicPaths = ['/auth/signin', '/auth/signup', '/auth/verify', '/auth/error', '/api/auth'];
+const publicPaths = ['/auth/signin', '/auth/signup', '/auth/verify', '/auth/error', '/api'];
 
 const protectedPaths = ['/dashboard', '/onboarding'];
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Allow public paths
+  // Allow public paths (including all /api routes)
   if (publicPaths.some((path) => pathname.startsWith(path))) {
     return NextResponse.next();
   }
 
   // Check authentication for protected paths
   if (protectedPaths.some((path) => pathname.startsWith(path))) {
-    const token = await getToken({
-      req: request,
-      secret: process.env.NEXTAUTH_SECRET,
-    });
+    try {
+      const token = await getToken({
+        req: request,
+        secret: process.env.NEXTAUTH_SECRET,
+      });
 
-    // Redirect to signin if not authenticated
-    if (!token) {
+      // Redirect to signin if not authenticated
+      if (!token) {
+        const url = new URL('/auth/signin', request.url);
+        url.searchParams.set('callbackUrl', pathname);
+        return NextResponse.redirect(url);
+      }
+
+      // Redirect to onboarding if role not set
+      if (!token.role && pathname !== '/onboarding') {
+        return NextResponse.redirect(new URL('/onboarding', request.url));
+      }
+
+      // Redirect from onboarding if role already set
+      if (token.role && pathname === '/onboarding') {
+        return NextResponse.redirect(new URL('/dashboard', request.url));
+      }
+    } catch (error) {
+      // If token verification fails, redirect to signin
+      console.error('Middleware auth error:', error);
       const url = new URL('/auth/signin', request.url);
       url.searchParams.set('callbackUrl', pathname);
       return NextResponse.redirect(url);
-    }
-
-    // Redirect to onboarding if role not set
-    if (!token.role && pathname !== '/onboarding') {
-      return NextResponse.redirect(new URL('/onboarding', request.url));
-    }
-
-    // Redirect from onboarding if role already set
-    if (token.role && pathname === '/onboarding') {
-      return NextResponse.redirect(new URL('/dashboard', request.url));
     }
   }
 
