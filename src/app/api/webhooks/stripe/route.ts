@@ -24,7 +24,9 @@ async function handleCheckoutComplete(session: Stripe.Checkout.Session) {
   const userId = session.client_reference_id!;
   const subscriptionId = session.subscription as string;
   const customerId = session.customer as string;
-  const plan = session.metadata?.plan || 'PRO';
+  // Map plan string to SubscriptionPlan enum
+  const planStr = session.metadata?.plan || 'MONTHLY';
+  const plan = planStr === 'FREE_FINDER' ? 'FREE_FINDER' : 'MONTHLY';
 
   // Get subscription details from Stripe
   const stripe = requireStripe();
@@ -37,19 +39,17 @@ async function handleCheckoutComplete(session: Stripe.Checkout.Session) {
     },
     create: {
       userId,
-      stripeSubscriptionId: subscriptionId,
+      stripeSubId: subscriptionId,
       stripeCustomerId: customerId,
       status: 'ACTIVE',
-      plan,
-      currentPeriodStart: new Date(subscription.current_period_start * 1000),
+      plan: plan as 'FREE_FINDER' | 'MONTHLY',
       currentPeriodEnd: new Date(subscription.current_period_end * 1000),
     },
     update: {
-      stripeSubscriptionId: subscriptionId,
+      stripeSubId: subscriptionId,
       stripeCustomerId: customerId,
       status: 'ACTIVE',
-      plan,
-      currentPeriodStart: new Date(subscription.current_period_start * 1000),
+      plan: plan as 'FREE_FINDER' | 'MONTHLY',
       currentPeriodEnd: new Date(subscription.current_period_end * 1000),
     },
   });
@@ -79,7 +79,6 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
     },
     data: {
       status: subscription.status === 'active' ? 'ACTIVE' : 'CANCELED',
-      currentPeriodStart: new Date(subscription.current_period_start * 1000),
       currentPeriodEnd: new Date(subscription.current_period_end * 1000),
     },
   });
@@ -112,7 +111,6 @@ async function handleSubscriptionDelete(subscription: Stripe.Subscription) {
     },
     data: {
       status: 'CANCELED',
-      canceledAt: new Date(),
     },
   });
 

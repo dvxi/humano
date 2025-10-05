@@ -235,14 +235,17 @@ async function handleWorkoutEvent(payload: any) {
   await db.workout.create({
     data: {
       userId,
-      type: name || 'Unknown',
-      duration: Math.round(
+      timestamp: new Date(metadata.start_time),
+      activityType: name || 'Unknown',
+      durationMin: Math.round(
         (new Date(metadata.end_time).getTime() - new Date(metadata.start_time).getTime()) / 60000
       ),
-      calories: calories_data?.total_burned_calories || null,
-      distance: distance_data?.distance_meters || null,
-      notes: `Synced from Terra`,
-      date: new Date(metadata.start_time),
+      meta: {
+        source: 'terra',
+        calories: calories_data?.total_burned_calories || null,
+        distance: distance_data?.distance_meters || null,
+        notes: 'Synced from Terra',
+      },
     },
   });
 
