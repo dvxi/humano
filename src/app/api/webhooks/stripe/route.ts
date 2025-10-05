@@ -57,7 +57,8 @@ async function handleCheckoutComplete(session: Stripe.Checkout.Session) {
   logger.info({ userId, subscriptionId, plan }, 'Subscription created');
 }
 
-async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function handleSubscriptionUpdate(subscription: any) {
   const customerId = subscription.customer as string;
 
   // Find user by customer ID
@@ -72,14 +73,18 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
     return;
   }
 
-  // Update subscription
+  // Update subscription with period end from Stripe
+  const periodEnd = subscription.current_period_end
+    ? new Date(subscription.current_period_end * 1000)
+    : undefined;
+
   await db.subscription.update({
     where: {
       id: existingSubscription.id,
     },
     data: {
       status: subscription.status === 'active' ? 'ACTIVE' : 'CANCELED',
-      currentPeriodEnd: new Date(subscription.current_period_end * 1000),
+      ...(periodEnd && { currentPeriodEnd: periodEnd }),
     },
   });
 
@@ -89,7 +94,8 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
   );
 }
 
-async function handleSubscriptionDelete(subscription: Stripe.Subscription) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function handleSubscriptionDelete(subscription: any) {
   const customerId = subscription.customer as string;
 
   // Find user by customer ID
