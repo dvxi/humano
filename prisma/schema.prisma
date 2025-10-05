@@ -36,8 +36,11 @@ enum IntegrationStatus {
 enum MetricType {
   HRV
   RHR
+  HEART_RATE
   SLEEP
   STEPS
+  CALORIES
+  ACTIVE_MINUTES
   HYDRATION
   MOOD
   STRESS
