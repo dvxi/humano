@@ -58,18 +58,25 @@ export async function POST(req: NextRequest) {
     // Handle different event types
     switch (event.event_type) {
       case 'daily.data.sleep.created':
+      case 'daily.data.sleep.updated':
         await handleSleepData(event);
         break;
 
       case 'daily.data.activity.created':
+      case 'daily.data.activity.updated':
         await handleActivityData(event);
         break;
 
       case 'daily.data.body.created':
+      case 'daily.data.body.updated':
         await handleBodyData(event);
         break;
 
-      case 'daily.data.workout.created':
+      case 'daily.workouts.created':
+      case 'daily.workouts.updated':
+      case 'daily.data.workout_distance.created':
+      case 'daily.data.workout_duration.created':
+      case 'daily.data.workout_stream.created':
         await handleWorkoutData(event);
         break;
 

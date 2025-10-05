@@ -68,16 +68,28 @@ https://your-domain.com/api/webhooks/vital
 
    **Daily Data Events:**
    - ☑️ `daily.data.sleep.created` - Sleep data from devices
+   - ☑️ `daily.data.sleep.updated` - Sleep data updates
    - ☑️ `daily.data.activity.created` - Daily activity summary
+   - ☑️ `daily.data.activity.updated` - Activity updates
    - ☑️ `daily.data.body.created` - Body metrics (weight, body fat, etc.)
-   - ☑️ `daily.data.workout.created` - Workout sessions
+   - ☑️ `daily.data.body.updated` - Body metrics updates
 
-   **Timeseries Events (Optional):**
-   - ☑️ `timeseries.data.created` - Real-time data streams
+   **Workout Events:**
+   - ☑️ `daily.workouts.created` - New workout sessions
+   - ☑️ `daily.workouts.updated` - Workout updates
+   - ☑️ `daily.data.workout_distance.created` - Workout distance data
+   - ☑️ `daily.data.workout_duration.created` - Workout duration data
+   - ☑️ `daily.data.workout_stream.created` - Workout stream data (heart rate, etc.)
 
-   **User Events (Optional):**
+   **User Events (Recommended):**
    - ☑️ `user.connected` - When user connects a device
    - ☑️ `user.disconnected` - When user disconnects a device
+
+   **Note:** The exact event names may vary. In the Vital dashboard, look for events like:
+   - `workouts.created` and `workouts.updated`
+   - `workout_distance.created`
+   - `workout_duration.created`
+   - `workout_stream.created`
 
 5. **Get Webhook Secret**
    - After creating the webhook, Vital will show you a **Webhook Signing Secret**
@@ -329,7 +341,15 @@ Once webhooks are working:
 - [ ] App is running (locally with ngrok or deployed)
 - [ ] Webhook URL is publicly accessible
 - [ ] Webhook endpoint created in Vital dashboard
-- [ ] Events are subscribed (sleep, activity, workout, body)
+- [ ] Events are subscribed:
+  - [ ] `daily.data.sleep.created` and `.updated`
+  - [ ] `daily.data.activity.created` and `.updated`
+  - [ ] `daily.data.body.created` and `.updated`
+  - [ ] `daily.workouts.created` and `.updated`
+  - [ ] `daily.data.workout_distance.created`
+  - [ ] `daily.data.workout_duration.created`
+  - [ ] `daily.data.workout_stream.created`
+  - [ ] `user.connected` and `user.disconnected`
 - [ ] Webhook secret copied to `.env`
 - [ ] App restarted after adding secret
 - [ ] Test event sent from Vital dashboard
