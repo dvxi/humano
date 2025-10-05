@@ -34,6 +34,27 @@ export function IntegrationCard({ integration, connectedIntegration }: Integrati
     setIsLoading(true);
 
     try {
+      // Handle Terra separately
+      if (integration.provider === 'TERRA') {
+        const response = await fetch('/api/integrations/terra/connect', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            providers: ['FITBIT', 'GARMIN', 'OURA', 'WHOOP', 'STRAVA'],
+          }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.url) {
+          window.location.href = data.url;
+        } else {
+          toast.error(data.error || 'Failed to initiate connection');
+        }
+        return;
+      }
+
+      // Handle other integrations (Vital, Polar, Google Fit)
       const response = await fetch('/api/integrations/connect', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
