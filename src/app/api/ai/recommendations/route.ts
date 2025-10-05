@@ -58,11 +58,11 @@ export async function GET(_request: NextRequest) {
     const workouts = await db.workout.findMany({
       where: {
         userId,
-        date: {
+        timestamp: {
           gte: sevenDaysAgo,
         },
       },
-      orderBy: { date: 'desc' },
+      orderBy: { timestamp: 'desc' },
       take: 10,
     });
 
@@ -83,9 +83,9 @@ export async function GET(_request: NextRequest) {
         avgCalories,
       },
       recentWorkouts: workouts.map((w) => ({
-        type: w.type,
-        duration: w.duration,
-        date: w.date,
+        type: w.activityType,
+        duration: w.durationMin || 0,
+        date: w.timestamp,
       })),
     });
 
