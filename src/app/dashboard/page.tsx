@@ -4,9 +4,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { Activity, Heart, Moon, TrendingUp, Droplet, Zap } from 'lucide-react';
+import { Activity, Heart, Moon, TrendingUp, Droplet, Zap, Loader2 } from 'lucide-react';
 import { generateRecommendations } from '@/lib/ai/openai';
 import { subDays } from 'date-fns';
+import { Suspense } from 'react';
 
 async function getRecentMetrics(userId: string) {
   const yesterday = new Date();
@@ -116,10 +117,78 @@ async function getRecommendation(userId: string) {
   }
 }
 
+// Color schemes for different recommendation types
+const recommendationStyles = {
+  REST: {
+    card: 'bg-blue-50 dark:bg-blue-950 border-blue-200 dark:border-blue-800',
+    badge:
+      'bg-blue-100 text-blue-900 dark:bg-blue-900 dark:text-blue-100 border-blue-300 dark:border-blue-700',
+  },
+  EASY: {
+    card: 'bg-green-50 dark:bg-green-950 border-green-200 dark:border-green-800',
+    badge:
+      'bg-green-100 text-green-900 dark:bg-green-900 dark:text-green-100 border-green-300 dark:border-green-700',
+  },
+  MODERATE: {
+    card: 'bg-yellow-50 dark:bg-yellow-950 border-yellow-200 dark:border-yellow-800',
+    badge:
+      'bg-yellow-100 text-yellow-900 dark:bg-yellow-900 dark:text-yellow-100 border-yellow-300 dark:border-yellow-700',
+  },
+  HARD: {
+    card: 'bg-red-50 dark:bg-red-950 border-red-200 dark:border-red-800',
+    badge:
+      'bg-red-100 text-red-900 dark:bg-red-900 dark:text-red-100 border-red-300 dark:border-red-700',
+  },
+};
+
+// Loading component for recommendation
+function RecommendationLoading() {
+  return (
+    <Card className="bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-800">
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <CardTitle>Today&apos;s Recommendation</CardTitle>
+          <Badge variant="outline" className="text-lg font-bold">
+            <Loader2 className="h-4 w-4 animate-spin" />
+          </Badge>
+        </div>
+      </CardHeader>
+      <CardContent>
+        <div className="flex items-center gap-2 text-muted-foreground">
+          <Loader2 className="h-4 w-4 animate-spin" />
+          <p>The AI recommendation is being generated...</p>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+// Recommendation component that fetches data
+async function RecommendationCard({ userId }: { userId: string }) {
+  const recommendation = await getRecommendation(userId);
+  const styles = recommendationStyles[recommendation.type];
+
+  return (
+    <Card className={styles.card}>
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <CardTitle>Today&apos;s Recommendation</CardTitle>
+          <Badge className={`text-lg font-bold ${styles.badge}`}>{recommendation.type}</Badge>
+        </div>
+      </CardHeader>
+      <CardContent>
+        <p className="text-foreground">{recommendation.rationale}</p>
+        <Button asChild className="mt-4" variant="outline">
+          <Link href="/dashboard/activity">Log Workout</Link>
+        </Button>
+      </CardContent>
+    </Card>
+  );
+}
+
 export default async function DashboardPage() {
   const user = await requireAuth();
   const metrics = await getRecentMetrics(user.id);
-  const recommendation = await getRecommendation(user.id);
 
   // Group metrics by type
   const metricsByType = metrics.reduce(
@@ -139,13 +208,6 @@ export default async function DashboardPage() {
   const latestSteps = metricsByType.STEPS?.[0];
   const latestHydration = metricsByType.HYDRATION?.[0];
 
-  const recommendationColors = {
-    REST: 'bg-accent',
-    EASY: 'bg-secondary',
-    MODERATE: 'bg-muted',
-    HARD: 'bg-primary text-primary-foreground',
-  };
-
   return (
     <div className="space-y-8">
       <div>
@@ -154,22 +216,9 @@ export default async function DashboardPage() {
       </div>
 
       {/* Daily Recommendation */}
-      <Card className={recommendationColors[recommendation.type]}>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle>Today&apos;s Recommendation</CardTitle>
-            <Badge variant="outline" className="text-lg font-bold">
-              {recommendation.type}
-            </Badge>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <p>{recommendation.rationale}</p>
-          <Button asChild className="mt-4" variant="outline">
-            <Link href="/dashboard/activity">Log Workout</Link>
-          </Button>
-        </CardContent>
-      </Card>
+      <Suspense fallback={<RecommendationLoading />}>
+        <RecommendationCard userId={user.id} />
+      </Suspense>
 
       {/* Metrics Grid */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
