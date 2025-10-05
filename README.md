@@ -1,36 +1,153 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 💪 Fitness & Wellbeing App
 
-## Getting Started
+A production-ready Next.js fitness application with real health integrations, AI-powered recommendations, and subscription management.
 
-First, run the development server:
+## 🚀 Features
+
+- **Health Integrations**: Vital, Terra, Polar AccessLink, Google Fit
+- **AI Recommendations**: Daily training suggestions based on HRV, sleep, and recovery metrics
+- **Subscription Management**: Stripe-powered monthly subscriptions
+- **Trainer Directory**: Find and connect with certified trainers
+- **Comprehensive Tracking**: Workouts, metrics, mood, stress, hydration, and more
+- **Minimalist Design**: Black & white, accessible (WCAG AA), fast (Core Web Vitals)
+
+## 🛠️ Tech Stack
+
+- **Framework**: Next.js 15 (App Router, Server Actions)
+- **UI**: shadcn/ui + Radix, Tailwind CSS (grayscale)
+- **Database**: PostgreSQL with Prisma ORM
+- **Auth**: NextAuth (email magic link + OAuth)
+- **Payments**: Stripe
+- **AI**: OpenAI
+- **Testing**: Vitest + Testing Library + Playwright
+- **CI/CD**: GitHub Actions
+
+## 📋 Prerequisites
+
+- Node.js 20+
+- pnpm 10+
+- PostgreSQL 16+
+
+## 🏃 Getting Started
+
+1. **Clone and install dependencies**:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. **Set up environment variables**:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+cp env.example .env.local
+# Edit .env.local with your credentials
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+3. **Set up the database**:
 
-## Learn More
+```bash
+pnpm db:push
+pnpm db:seed
+```
 
-To learn more about Next.js, take a look at the following resources:
+4. **Run the development server**:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+pnpm dev
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Open [http://localhost:3000](http://localhost:3000) to see the app.
 
-## Deploy on Vercel
+## 🧪 Testing
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+# Run all tests
+pnpm test
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+# Unit tests with coverage
+pnpm test:unit
+
+# E2E tests
+pnpm test:e2e
+
+# E2E tests with UI
+pnpm test:e2e:ui
+
+# Run full verification (lint, typecheck, tests, build)
+pnpm verify
+```
+
+## 📦 Scripts
+
+- `pnpm dev` - Start development server
+- `pnpm build` - Build for production
+- `pnpm start` - Start production server
+- `pnpm lint` - Run ESLint
+- `pnpm format` - Format code with Prettier
+- `pnpm typecheck` - Run TypeScript type checking
+- `pnpm db:generate` - Generate Prisma Client
+- `pnpm db:push` - Push schema to database
+- `pnpm db:migrate` - Run migrations
+- `pnpm db:studio` - Open Prisma Studio
+- `pnpm db:seed` - Seed database with test data
+
+## 📚 Documentation
+
+- [Architecture](./docs/architecture.md) - System architecture and design patterns
+- [Tasks](./docs/tasks.md) - Implementation checklist and progress
+- [API](./docs/api.md) - API endpoints and webhooks
+
+## 🔐 Environment Variables
+
+See `env.example` for all required and optional environment variables.
+
+### Required
+
+- `DATABASE_URL` - PostgreSQL connection string
+- `NEXTAUTH_URL` - App URL
+- `NEXTAUTH_SECRET` - NextAuth secret key
+
+### Optional (for full functionality)
+
+- `RESEND_API_KEY` - Email magic links
+- `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` - Google OAuth
+- `STRIPE_SECRET_KEY` - Stripe payments
+- `OPENAI_API_KEY` - AI recommendations
+- `VITAL_API_KEY` - Vital health data
+- `TERRA_API_KEY` - Terra health data
+- `POLAR_CLIENT_ID` - Polar AccessLink
+- `GOOGLE_FIT_CLIENT_ID` - Google Fit
+
+## 🏗️ Project Structure
+
+```
+.
+├── docs/              # Documentation
+├── prisma/            # Database schema and migrations
+├── src/
+│   ├── app/          # Next.js App Router pages & API routes
+│   ├── components/   # React components
+│   ├── core/         # Business logic (domain, services, ports)
+│   ├── integrations/ # External service adapters
+│   └── lib/          # Shared utilities
+├── tests/
+│   ├── unit/         # Unit tests
+│   ├── integration/  # Integration tests
+│   └── e2e/          # End-to-end tests
+└── .github/          # CI/CD workflows
+```
+
+## 🤝 Contributing
+
+1. Create a feature branch
+2. Make your changes
+3. Run `pnpm verify` to ensure all checks pass
+4. Submit a pull request
+
+## 📄 License
+
+MIT
+
+## 🙏 Acknowledgments
+
+Built with TDD principles and clean architecture patterns for production readiness.

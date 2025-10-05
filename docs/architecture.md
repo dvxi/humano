@@ -1,9 +1,11 @@
 # 🏗️ Fitness App Architecture
 
 ## Overview
+
 A production-ready Next.js fitness application with real health integrations, AI-powered recommendations, and subscription management. Built with TDD principles and clean architecture patterns.
 
 ## Tech Stack
+
 - **Framework**: Next.js 15 (App Router, Server Actions)
 - **UI**: shadcn/ui + Radix, Tailwind (grayscale only)
 - **Database**: PostgreSQL with Prisma ORM
@@ -17,6 +19,7 @@ A production-ready Next.js fitness application with real health integrations, AI
 ## Architecture Patterns
 
 ### Clean Architecture Layers
+
 ```
 src/
 ├── app/                    # Next.js App Router pages & API routes
@@ -30,6 +33,7 @@ src/
 ```
 
 ### Domain-Driven Design
+
 - **Entities**: User, Profile, Metric, Workout, Integration
 - **Value Objects**: MetricType, WorkoutType, RecommendationType
 - **Services**: RecommendationService, MetricNormalizationService
@@ -38,6 +42,7 @@ src/
 ## Data Flow
 
 ### Health Data Ingestion
+
 ```mermaid
 graph TD
     A[Health Device] --> B[Vital/Terra API]
@@ -50,6 +55,7 @@ graph TD
 ```
 
 ### User Authentication Flow
+
 ```mermaid
 graph TD
     A[User Signup] --> B[Email Magic Link]
@@ -60,6 +66,7 @@ graph TD
 ```
 
 ### AI Recommendation Flow
+
 ```mermaid
 graph TD
     A[Metric Data] --> B[Recommendation Service]
@@ -69,6 +76,7 @@ graph TD
 ```
 
 ## Security & Privacy
+
 - **Data Encryption**: Sensitive tokens encrypted at rest
 - **GDPR Compliance**: Data export/deletion capabilities
 - **Role-based Access**: User/Trainer role separation
@@ -76,18 +84,21 @@ graph TD
 - **Rate Limiting**: API endpoint protection
 
 ## Integration Strategy
+
 - **Primary**: Vital/Terra as health data aggregators
 - **Direct**: Polar AccessLink, Google Fit for specific use cases
 - **Fallback**: Manual data entry with validation
 - **Webhook Processing**: Background jobs for real-time data sync
 
 ## Testing Strategy
+
 - **Unit Tests**: Domain logic, services, utilities (80% coverage)
 - **Integration Tests**: API endpoints, database operations
 - **E2E Tests**: Critical user flows with Playwright
 - **TDD Approach**: Test-first development for all features
 
 ## Deployment & Monitoring
+
 - **CI/CD**: GitHub Actions with branch protection
 - **Health Checks**: `/api/health` endpoint
 - **Logging**: Structured logging with pino
