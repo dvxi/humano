@@ -41,16 +41,12 @@ async function handleAuthEvent(payload: any) {
     create: {
       userId,
       provider: 'TERRA',
-      providerUserId: terraUserId,
-      accessToken: '', // Terra doesn't expose access tokens
       status: 'CONNECTED',
-      metadata: { terraProvider: provider },
+      meta: { terraProvider: provider, terraUserId },
     },
     update: {
-      providerUserId: terraUserId,
       status: 'CONNECTED',
-      metadata: { terraProvider: provider },
-      connectedAt: new Date(),
+      meta: { terraProvider: provider, terraUserId },
     },
   });
 
@@ -67,7 +63,6 @@ async function handleDeauthEvent(payload: any) {
     where: {
       userId,
       provider: 'TERRA',
-      providerUserId: terraUserId,
     },
     data: {
       status: 'DISCONNECTED',
