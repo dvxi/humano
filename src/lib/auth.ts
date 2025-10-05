@@ -91,6 +91,15 @@ export const authOptions: NextAuthOptions = {
     error: '/auth/error',
   },
   callbacks: {
+    async redirect({ url, baseUrl }) {
+      // Log redirect for debugging
+      logger.info({ url, baseUrl }, 'NextAuth redirect');
+      // Allows relative callback URLs
+      if (url.startsWith('/')) return `${baseUrl}${url}`;
+      // Allows callback URLs on the same origin
+      else if (new URL(url).origin === baseUrl) return url;
+      return baseUrl;
+    },
     async session({ session, user }) {
       if (session.user) {
         session.user.id = user.id;
@@ -101,6 +110,7 @@ export const authOptions: NextAuthOptions = {
             select: { role: true },
           });
           session.user.role = dbUser?.role || 'USER';
+          logger.info({ userId: user.id, role: session.user.role }, 'Session callback executed');
         } catch (error) {
           logger.error({ error, userId: user.id }, 'Failed to fetch user role');
           session.user.role = 'USER';
