@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { getToken } from 'next-auth/jwt';
 
 /**
  * Authentication Middleware
@@ -13,8 +12,8 @@ import { getToken } from 'next-auth/jwt';
  * - /auth/* - Public (auth pages)
  * - / - Public (redirects based on session)
  *
- * Note: Using getToken() works with both JWT and database sessions
- * because NextAuth creates a session token cookie in both cases.
+ * Note: With database sessions, we rely on the session cookie presence
+ * and let server-side session checks handle role-based redirects.
  */
 
 const publicPaths = ['/auth/signin', '/auth/signup', '/auth/verify', '/auth/error', '/api'];
@@ -31,35 +30,19 @@ export async function middleware(request: NextRequest) {
 
   // Check authentication for protected paths
   if (protectedPaths.some((path) => pathname.startsWith(path))) {
-    try {
-      const token = await getToken({
-        req: request,
-        secret: process.env.NEXTAUTH_SECRET,
-      });
+    const sessionToken =
+      request.cookies.get('next-auth.session-token')?.value ||
+      request.cookies.get('__Secure-next-auth.session-token')?.value;
 
-      // Redirect to signin if not authenticated
-      if (!token) {
-        const url = new URL('/auth/signin', request.url);
-        url.searchParams.set('callbackUrl', pathname);
-        return NextResponse.redirect(url);
-      }
-
-      // Redirect to onboarding if role not set
-      if (!token.role && pathname !== '/onboarding') {
-        return NextResponse.redirect(new URL('/onboarding', request.url));
-      }
-
-      // Redirect from onboarding if role already set
-      if (token.role && pathname === '/onboarding') {
-        return NextResponse.redirect(new URL('/dashboard', request.url));
-      }
-    } catch (error) {
-      // If token verification fails, redirect to signin
-      console.error('Middleware auth error:', error);
+    // Redirect to signin if not authenticated
+    if (!sessionToken) {
       const url = new URL('/auth/signin', request.url);
       url.searchParams.set('callbackUrl', pathname);
       return NextResponse.redirect(url);
     }
+
+    // Let the page components handle role-based redirects
+    // since we can't easily access the database from middleware
   }
 
   return NextResponse.next();

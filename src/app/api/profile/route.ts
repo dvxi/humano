@@ -24,6 +24,25 @@ const profileSchema = z.object({
     .optional(),
 });
 
+export async function GET() {
+  try {
+    const session = await getServerSession(authOptions);
+
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const profile = await db.profile.findUnique({
+      where: { userId: session.user.id },
+    });
+
+    return NextResponse.json({ profile });
+  } catch (error) {
+    console.error('Profile fetch error:', error);
+    return NextResponse.json({ error: 'Failed to fetch profile' }, { status: 500 });
+  }
+}
+
 export async function PUT(req: NextRequest) {
   try {
     const session = await getServerSession(authOptions);

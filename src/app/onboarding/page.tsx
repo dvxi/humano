@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -18,8 +19,29 @@ type Step = 'role' | 'profile' | 'subscription';
 
 export default function OnboardingPage() {
   const router = useRouter();
+  const { data: session, status } = useSession();
   const [step, setStep] = useState<Step>('role');
   const [isLoading, setIsLoading] = useState(false);
+  const [hasProfile, setHasProfile] = useState<boolean | null>(null);
+
+  // Check if user has completed onboarding
+  useEffect(() => {
+    if (status === 'authenticated') {
+      fetch('/api/profile')
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.profile) {
+            // User has already completed onboarding
+            router.push('/dashboard');
+          } else {
+            setHasProfile(false);
+          }
+        })
+        .catch(() => {
+          setHasProfile(false);
+        });
+    }
+  }, [status, router]);
 
   // Form data
   const [role, setRole] = useState<'USER' | 'TRAINER' | null>(null);
@@ -73,6 +95,17 @@ export default function OnboardingPage() {
       setIsLoading(false);
     }
   };
+
+  // Show loading while checking profile status
+  if (status === 'loading' || hasProfile === null) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <div className="text-center">
+          <div className="text-lg">Loading...</div>
+        </div>
+      </div>
+    );
+  }
 
   if (step === 'role') {
     return (
