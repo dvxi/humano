@@ -34,8 +34,11 @@ export function DashboardNav({ user }: DashboardNavProps) {
     <nav className="border-b bg-background">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <div className="flex items-center gap-6">
-          <Link href="/dashboard" className="text-xl font-bold">
-            Fitness App
+          <Link
+            href="/dashboard"
+            className="text-3xl font-bold font-[family-name:var(--font-noto-serif-hebrew)]"
+          >
+            H
           </Link>
 
           <div className="hidden items-center gap-1 md:flex">

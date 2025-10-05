@@ -1,11 +1,17 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Inter, Noto_Serif_Hebrew } from 'next/font/google';
 import './globals.css';
 import { Providers } from '@/components/providers';
 
 const inter = Inter({
   variable: '--font-inter',
   subsets: ['latin'],
+});
+
+const notoSerifHebrew = Noto_Serif_Hebrew({
+  variable: '--font-noto-serif-hebrew',
+  subsets: ['latin', 'hebrew'],
+  weight: ['400', '700'],
 });
 
 export const metadata: Metadata = {
@@ -21,7 +27,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} antialiased`}>
+      <body className={`${inter.variable} ${notoSerifHebrew.variable} antialiased`}>
         <Providers>{children}</Providers>
       </body>
     </html>

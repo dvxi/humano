@@ -14,7 +14,7 @@ export default async function HomePage() {
     <div className="flex min-h-screen flex-col">
       <header className="border-b">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
-          <h1 className="text-xl font-bold">Fitness & Wellbeing</h1>
+          <h1 className="text-3xl font-bold font-[family-name:var(--font-noto-serif-hebrew)]">H</h1>
           <div className="flex gap-2">
             <Button variant="outline" asChild>
               <Link href="/auth/signin">Sign In</Link>
