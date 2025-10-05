@@ -88,7 +88,7 @@ async function handleActivityEvent(payload: any) {
   if (distance_data?.steps) {
     metrics.push({
       userId,
-      type: 'STEPS',
+      type: 'STEPS' as const,
       value: distance_data.steps,
       unit: 'steps',
       timestamp: new Date(metadata.start_time),
@@ -99,7 +99,7 @@ async function handleActivityEvent(payload: any) {
   if (calories_data?.total_burned_calories) {
     metrics.push({
       userId,
-      type: 'CALORIES',
+      type: 'CALORIES' as const,
       value: calories_data.total_burned_calories,
       unit: 'kcal',
       timestamp: new Date(metadata.start_time),
@@ -110,7 +110,7 @@ async function handleActivityEvent(payload: any) {
   if (active_durations_data?.activity_seconds) {
     metrics.push({
       userId,
-      type: 'ACTIVE_MINUTES',
+      type: 'ACTIVE_MINUTES' as const,
       value: Math.round(active_durations_data.activity_seconds / 60),
       unit: 'minutes',
       timestamp: new Date(metadata.start_time),
@@ -143,7 +143,7 @@ async function handleBodyEvent(payload: any) {
   if (measurements?.weight_kg) {
     metrics.push({
       userId,
-      type: 'WEIGHT',
+      type: 'WEIGHT' as const,
       value: measurements.weight_kg,
       unit: 'kg',
       timestamp: new Date(metadata.start_time),
@@ -154,7 +154,7 @@ async function handleBodyEvent(payload: any) {
   if (measurements?.heart_rate_bpm) {
     metrics.push({
       userId,
-      type: 'HEART_RATE',
+      type: 'HEART_RATE' as const,
       value: measurements.heart_rate_bpm,
       unit: 'bpm',
       timestamp: new Date(metadata.start_time),
@@ -165,7 +165,7 @@ async function handleBodyEvent(payload: any) {
   if (measurements?.body_fat_percentage) {
     metrics.push({
       userId,
-      type: 'BODY_FAT',
+      type: 'BODY_FAT' as const,
       value: measurements.body_fat_percentage,
       unit: '%',
       timestamp: new Date(metadata.start_time),
@@ -198,7 +198,7 @@ async function handleSleepEvent(payload: any) {
   if (sleep_durations_data?.asleep_duration_seconds) {
     metrics.push({
       userId,
-      type: 'SLEEP',
+      type: 'SLEEP' as const,
       value: Math.round(sleep_durations_data.asleep_duration_seconds / 3600),
       unit: 'hours',
       timestamp: new Date(metadata.start_time),
