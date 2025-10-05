@@ -5,6 +5,8 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Activity, Heart, Moon, TrendingUp, Droplet, Zap } from 'lucide-react';
+import { generateRecommendations } from '@/lib/ai/openai';
+import { subDays } from 'date-fns';
 
 async function getRecentMetrics(userId: string) {
   const yesterday = new Date();
@@ -26,13 +28,92 @@ async function getRecentMetrics(userId: string) {
   return metrics;
 }
 
-async function getRecommendation(_userId: string) {
-  // TODO: Implement AI recommendation
-  // For now, return a placeholder
-  return {
-    type: 'MODERATE' as const,
-    rationale: 'Based on your recent metrics, a moderate intensity workout is recommended.',
-  };
+async function getRecommendation(userId: string) {
+  try {
+    // Check if OpenAI is configured
+    if (!process.env.OPENAI_API_KEY) {
+      return {
+        type: 'MODERATE' as const,
+        rationale:
+          'Connect your health devices to get AI-powered personalized training recommendations.',
+      };
+    }
+
+    // Fetch user data for AI recommendation
+    const [profile, recentMetrics, recentWorkouts] = await Promise.all([
+      db.profile.findUnique({ where: { userId } }),
+      db.metric.findMany({
+        where: {
+          userId,
+          timestamp: { gte: subDays(new Date(), 7) },
+        },
+        orderBy: { timestamp: 'desc' },
+      }),
+      db.workout.findMany({
+        where: {
+          userId,
+          timestamp: { gte: subDays(new Date(), 7) },
+        },
+        orderBy: { timestamp: 'desc' },
+      }),
+    ]);
+
+    // Calculate average metrics
+    const avgMetrics = {
+      avgSteps:
+        recentMetrics.filter((m) => m.type === 'STEPS').reduce((sum, m) => sum + m.value, 0) /
+        Math.max(recentMetrics.filter((m) => m.type === 'STEPS').length, 1),
+      avgSleep:
+        recentMetrics.filter((m) => m.type === 'SLEEP').reduce((sum, m) => sum + m.value, 0) /
+        Math.max(recentMetrics.filter((m) => m.type === 'SLEEP').length, 1),
+      avgHeartRate:
+        recentMetrics.filter((m) => m.type === 'RHR').reduce((sum, m) => sum + m.value, 0) /
+        Math.max(recentMetrics.filter((m) => m.type === 'RHR').length, 1),
+    };
+
+    // Generate AI recommendation
+    const aiResponse = await generateRecommendations({
+      profile: {
+        age: profile?.age || undefined,
+        sex: profile?.sex || undefined,
+        weight: profile?.weightKg || undefined,
+        height: profile?.heightCm || undefined,
+        fitnessLevel: undefined,
+        goals: undefined,
+      },
+      recentMetrics: avgMetrics,
+      recentWorkouts: recentWorkouts.map((w) => ({
+        type: w.activityType,
+        duration: w.durationMin || 0,
+        date: w.timestamp,
+      })),
+    });
+
+    // Determine intensity based on AI insights
+    const hasWarnings = aiResponse.warnings.length > 0;
+    const workoutCount = recentWorkouts.length;
+
+    let intensity: 'REST' | 'EASY' | 'MODERATE' | 'HARD' = 'MODERATE';
+    if (hasWarnings || workoutCount >= 5) {
+      intensity = 'REST';
+    } else if (workoutCount >= 3) {
+      intensity = 'EASY';
+    } else if (workoutCount <= 1) {
+      intensity = 'HARD';
+    }
+
+    return {
+      type: intensity,
+      rationale: aiResponse.recommendations[0] || 'Keep up the good work with your training!',
+    };
+  } catch (error) {
+    console.error('Error generating AI recommendation:', error);
+    // Fallback to placeholder
+    return {
+      type: 'MODERATE' as const,
+      rationale: 'Based on your recent metrics, a moderate intensity workout is recommended.',
+    };
+  }
 }
 
 export default async function DashboardPage() {
