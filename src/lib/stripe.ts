@@ -24,7 +24,7 @@ if (!isStripeConfigured) {
 // Initialize Stripe client (or null if not configured)
 export const stripe = isStripeConfigured
   ? new Stripe(process.env.STRIPE_SECRET_KEY!, {
-      apiVersion: '2024-12-18.acacia',
+      apiVersion: '2025-09-30.clover',
       typescript: true,
     })
   : null;
