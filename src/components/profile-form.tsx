@@ -29,7 +29,13 @@ interface ProfileFormProps {
   } | null;
 }
 
-export function ProfileForm({ userId, profile, userName, isTrainer, trainer }: ProfileFormProps) {
+export function ProfileForm({
+  userId: _userId,
+  profile,
+  userName,
+  isTrainer,
+  trainer,
+}: ProfileFormProps) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
