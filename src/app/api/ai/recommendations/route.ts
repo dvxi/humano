@@ -25,11 +25,11 @@ export async function GET(_request: NextRequest) {
     const metrics = await db.metric.findMany({
       where: {
         userId,
-        recordedAt: {
+        timestamp: {
           gte: sevenDaysAgo,
         },
       },
-      orderBy: { recordedAt: 'desc' },
+      orderBy: { timestamp: 'desc' },
     });
 
     // Calculate averages

@@ -96,8 +96,8 @@ async function handleActivityEvent(payload: any) {
       type: 'STEPS',
       value: distance_data.steps,
       unit: 'steps',
-      source: 'TERRA',
-      recordedAt: new Date(metadata.start_time),
+      timestamp: new Date(metadata.start_time),
+      meta: { source: 'TERRA' },
     });
   }
 
@@ -107,8 +107,8 @@ async function handleActivityEvent(payload: any) {
       type: 'CALORIES',
       value: calories_data.total_burned_calories,
       unit: 'kcal',
-      source: 'TERRA',
-      recordedAt: new Date(metadata.start_time),
+      timestamp: new Date(metadata.start_time),
+      meta: { source: 'TERRA' },
     });
   }
 
@@ -118,8 +118,8 @@ async function handleActivityEvent(payload: any) {
       type: 'ACTIVE_MINUTES',
       value: Math.round(active_durations_data.activity_seconds / 60),
       unit: 'minutes',
-      source: 'TERRA',
-      recordedAt: new Date(metadata.start_time),
+      timestamp: new Date(metadata.start_time),
+      meta: { source: 'TERRA' },
     });
   }
 
@@ -151,8 +151,8 @@ async function handleBodyEvent(payload: any) {
       type: 'WEIGHT',
       value: measurements.weight_kg,
       unit: 'kg',
-      source: 'TERRA',
-      recordedAt: new Date(metadata.start_time),
+      timestamp: new Date(metadata.start_time),
+      meta: { source: 'TERRA' },
     });
   }
 
@@ -162,8 +162,8 @@ async function handleBodyEvent(payload: any) {
       type: 'HEART_RATE',
       value: measurements.heart_rate_bpm,
       unit: 'bpm',
-      source: 'TERRA',
-      recordedAt: new Date(metadata.start_time),
+      timestamp: new Date(metadata.start_time),
+      meta: { source: 'TERRA' },
     });
   }
 
@@ -173,8 +173,8 @@ async function handleBodyEvent(payload: any) {
       type: 'BODY_FAT',
       value: measurements.body_fat_percentage,
       unit: '%',
-      source: 'TERRA',
-      recordedAt: new Date(metadata.start_time),
+      timestamp: new Date(metadata.start_time),
+      meta: { source: 'TERRA' },
     });
   }
 
@@ -206,8 +206,8 @@ async function handleSleepEvent(payload: any) {
       type: 'SLEEP',
       value: Math.round(sleep_durations_data.asleep_duration_seconds / 3600),
       unit: 'hours',
-      source: 'TERRA',
-      recordedAt: new Date(metadata.start_time),
+      timestamp: new Date(metadata.start_time),
+      meta: { source: 'TERRA' },
     });
   }
 
