@@ -83,17 +83,35 @@ export const authOptions: NextAuthOptions = {
       if (session.user) {
         session.user.id = user.id;
         // Fetch user role from database
-        const dbUser = await db.user.findUnique({
-          where: { id: user.id },
-          select: { role: true },
-        });
-        session.user.role = dbUser?.role || 'USER';
+        try {
+          const dbUser = await db.user.findUnique({
+            where: { id: user.id },
+            select: { role: true },
+          });
+          session.user.role = dbUser?.role || 'USER';
+        } catch (error) {
+          logger.error({ error, userId: user.id }, 'Failed to fetch user role');
+          session.user.role = 'USER';
+        }
       }
       return session;
     },
-    async signIn({ user, account }) {
-      logger.info({ userId: user.id, provider: account?.provider }, 'User signed in');
-      return true;
+    async signIn({ user, account, profile }) {
+      try {
+        logger.info(
+          {
+            userId: user.id,
+            email: user.email,
+            provider: account?.provider,
+            providerAccountId: account?.providerAccountId,
+          },
+          'User attempting sign in'
+        );
+        return true;
+      } catch (error) {
+        logger.error({ error, userId: user.id, provider: account?.provider }, 'Sign in failed');
+        return false;
+      }
     },
   },
   events: {
@@ -105,5 +123,18 @@ export const authOptions: NextAuthOptions = {
     strategy: 'database',
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
-  debug: process.env.NODE_ENV === 'development',
+  debug: process.env.NODE_ENV === 'development' || process.env.NEXTAUTH_DEBUG === 'true',
+  logger: {
+    error(code, metadata) {
+      logger.error({ code, metadata }, 'NextAuth error');
+    },
+    warn(code) {
+      logger.warn({ code }, 'NextAuth warning');
+    },
+    debug(code, metadata) {
+      if (process.env.NEXTAUTH_DEBUG === 'true') {
+        logger.debug({ code, metadata }, 'NextAuth debug');
+      }
+    },
+  },
 };
