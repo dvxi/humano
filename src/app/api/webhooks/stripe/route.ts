@@ -28,9 +28,9 @@ async function handleCheckoutComplete(session: Stripe.Checkout.Session) {
   const planStr = session.metadata?.plan || 'MONTHLY';
   const plan = planStr === 'FREE_FINDER' ? 'FREE_FINDER' : 'MONTHLY';
 
-  // Get subscription details from Stripe
-  const stripe = requireStripe();
-  const subscription = await stripe.subscriptions.retrieve(subscriptionId);
+  // Calculate period end (30 days from now as default)
+  const currentPeriodEnd = new Date();
+  currentPeriodEnd.setDate(currentPeriodEnd.getDate() + 30);
 
   // Create subscription in database
   await db.subscription.upsert({
@@ -43,14 +43,14 @@ async function handleCheckoutComplete(session: Stripe.Checkout.Session) {
       stripeCustomerId: customerId,
       status: 'ACTIVE',
       plan: plan as 'FREE_FINDER' | 'MONTHLY',
-      currentPeriodEnd: new Date(subscription.current_period_end * 1000),
+      currentPeriodEnd,
     },
     update: {
       stripeSubId: subscriptionId,
       stripeCustomerId: customerId,
       status: 'ACTIVE',
       plan: plan as 'FREE_FINDER' | 'MONTHLY',
-      currentPeriodEnd: new Date(subscription.current_period_end * 1000),
+      currentPeriodEnd,
     },
   });
 
