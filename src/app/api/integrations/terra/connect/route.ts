@@ -9,6 +9,8 @@ import { requireAuth, errorResponse } from '@/lib/api-auth';
 import { generateTerraWidgetSession } from '@/integrations/terra/client';
 import { logger } from '@/lib/logger';
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: NextRequest) {
   try {
     const { userId } = await requireAuth();

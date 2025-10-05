@@ -4,6 +4,8 @@ import { authOptions } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { z } from 'zod';
 
+export const dynamic = 'force-dynamic';
+
 const onboardingSchema = z.object({
   role: z.enum(['USER', 'TRAINER']),
   profile: z.object({

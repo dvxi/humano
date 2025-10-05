@@ -8,6 +8,8 @@ import { NextRequest } from 'next/server';
 import { requireAuth, errorResponse } from '@/lib/api-auth';
 import { generateRecommendations } from '@/lib/ai/openai';
 import { db } from '@/lib/db';
+
+export const dynamic = 'force-dynamic';
 import { logger } from '@/lib/logger';
 import { subDays } from 'date-fns';
 

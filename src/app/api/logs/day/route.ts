@@ -4,6 +4,8 @@ import { authOptions } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { z } from 'zod';
 
+export const dynamic = 'force-dynamic';
+
 const dayLogSchema = z.object({
   timestamp: z.string(),
   hydration: z.number().nullable(),

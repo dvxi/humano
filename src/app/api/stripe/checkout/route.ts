@@ -8,6 +8,8 @@
  */
 
 import { NextRequest } from 'next/server';
+
+export const dynamic = 'force-dynamic';
 import { requireAuth, errorResponse } from '@/lib/api-auth';
 import { requireStripe, isStripeEnabled } from '@/lib/stripe';
 import { logger } from '@/lib/logger';

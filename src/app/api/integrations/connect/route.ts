@@ -4,6 +4,8 @@ import { authOptions } from '@/lib/auth';
 import { getVitalClient } from '@/integrations/vital/client';
 import { z } from 'zod';
 
+export const dynamic = 'force-dynamic';
+
 const connectSchema = z.object({
   provider: z.enum(['VITAL', 'TERRA', 'POLAR', 'GOOGLEFIT']),
 });

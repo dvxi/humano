@@ -9,6 +9,8 @@ import { requireAuth, errorResponse } from '@/lib/api-auth';
 import { analyzeWorkout } from '@/lib/ai/openai';
 import { logger } from '@/lib/logger';
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: NextRequest) {
   try {
     const { userId } = await requireAuth();

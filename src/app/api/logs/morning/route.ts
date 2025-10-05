@@ -4,6 +4,8 @@ import { authOptions } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { z } from 'zod';
 
+export const dynamic = 'force-dynamic';
+
 const morningLogSchema = z.object({
   timestamp: z.string(),
   mood: z.number().min(1).max(5).nullable(),
